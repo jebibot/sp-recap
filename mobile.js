@@ -34,7 +34,7 @@
     });
 
   const graph = document.getElementById("st__part-1__graph");
-  if (!graph) {
+  if (graph != null) {
     return;
   }
 
@@ -183,7 +183,7 @@
     new Highcharts.Chart("r2", {
       ...options,
       chart: {
-        height: Math.max(300, 30 * recap.length),
+        height: Math.max(300, recap.length * 30),
       },
       yAxis: {
         opposite: true,
