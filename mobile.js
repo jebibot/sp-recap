@@ -109,6 +109,7 @@
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
         .style("width", "100%")
+        .style("max-width", "800px")
         .style("height", "auto");
       const node = svg
         .append("g")
