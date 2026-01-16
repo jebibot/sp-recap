@@ -34,7 +34,7 @@
     });
 
   const graph = document.getElementById("st__part-1__graph");
-  if (graph != null) {
+  if (graph == null) {
     return;
   }
 
