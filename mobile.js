@@ -1,13 +1,14 @@
 (function () {
+  if (!location.href.startsWith("https://m.sooplive.co.kr/statistics/a/watch")) {
+    location.href = "https://m.sooplive.co.kr/statistics/a/watch/?szModule=UserLiveWatchTimeData&szMethod=watch";
+    return;
+  }
+
   const favorites = {};
   const fetchFavorites = async () => {
     const res = await fetch(
       "https://api.m.sooplive.co.kr/station/favorite/a/items",
       {
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
-        },
-        body: "",
         method: "POST",
         credentials: "include",
       }
@@ -39,6 +40,7 @@
   }
 
   const container = document.createElement("div");
+  container.style.textAlign = "center";
   const container1 = document.createElement("div");
   container1.id = "r1";
   const container2 = document.createElement("div");
