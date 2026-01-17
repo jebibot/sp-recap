@@ -142,6 +142,7 @@
         .attr("y", (d) => -d.r)
         .attr("width", (d) => d.r * 2)
         .attr("height", (d) => d.r * 2)
+        .attr("preserveAspectRatio", "xMidYMid slice")
         .attr("clip-path", (d) => `circle(${d.r})`);
 
       const text = node

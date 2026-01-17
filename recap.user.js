@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SOOP - 참여 통계 리캡
 // @namespace    https://www.afreecatv.com/
-// @version      4.1.3
+// @version      4.1.4
 // @description  참여 통계에 스트리머 별 총 시간을 표시합니다
 // @author       Jebibot
 // @match        *://broadstatistic.sooplive.co.kr/*
@@ -196,6 +196,7 @@
         .attr("y", (d) => -d.r)
         .attr("width", (d) => d.r * 2)
         .attr("height", (d) => d.r * 2)
+        .attr("preserveAspectRatio", "xMidYMid slice")
         .attr("clip-path", (d) => `circle(${d.r})`);
 
       const text = node
