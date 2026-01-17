@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SOOP - 참여 통계 리캡
 // @namespace    https://www.afreecatv.com/
-// @version      4.1.5
+// @version      4.1.6
 // @description  참여 통계에 스트리머 별 총 시간을 표시합니다
 // @author       Jebibot
 // @match        *://broadstatistic.sooplive.co.kr/*
@@ -231,6 +231,7 @@
       button.style.fontSize = "18px";
       button.addEventListener("click", async () => {
         try {
+          container.scrollIntoView({ block: "nearest" });
           status.style.display = "block";
           status.textContent = "스크립트 로딩 중..";
           if (typeof unsafeWindow.GIF === "undefined") {
