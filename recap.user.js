@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SOOP - 참여 통계 리캡
 // @namespace    https://www.afreecatv.com/
-// @version      4.1.4
+// @version      4.1.5
 // @description  참여 통계에 스트리머 별 총 시간을 표시합니다
 // @author       Jebibot
 // @match        *://broadstatistic.sooplive.co.kr/*
@@ -251,7 +251,7 @@
           video.muted = true;
           await video.play();
 
-          const interval = 1000 / 30;
+          const interval = 30;
           const workerBlob = new Blob(
             [
               `importScripts('https://cdn.jsdelivr.net/npm/gif.js.optimized@1.0.1/dist/gif.worker.js');`,
