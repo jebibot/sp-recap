@@ -54,6 +54,7 @@
     loadScript(
       `https://static.sooplive.co.kr/asset/library/highcharts/js/modules/${name}.js`
     );
+  const wait = (t) => new Promise((resolve) => setTimeout(resolve, t));
   Promise.all([
     fetchFavorites(),
     loadScript(
@@ -152,16 +153,17 @@
 
     try {
       const d3 = unsafeWindow.d3;
+      const w = 540;
       const color = d3.scaleOrdinal(d3.schemeSet3);
-      const pack = d3.pack().size([540, 540]).padding(5);
+      const pack = d3.pack().size([w, w]).padding(5);
       const root = pack(
         d3.hierarchy({ children: recapData }).sum((d) => d.value)
       );
 
       const svg = d3
         .create("svg")
-        .attr("width", 540)
-        .attr("height", 540)
+        .attr("width", w)
+        .attr("height", w)
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
         .style("background-color", "white")
@@ -244,6 +246,7 @@
           const stream = await navigator.mediaDevices.getDisplayMedia({
             preferCurrentTab: true,
           });
+          status.textContent = "화면 녹화 준비 중..";
           const [track] = stream.getVideoTracks();
           await track.restrictTo(await RestrictionTarget.fromElement(svgNode));
 
@@ -251,6 +254,7 @@
           video.srcObject = stream;
           video.muted = true;
           await video.play();
+          await wait(500);
 
           const interval = 30;
           const workerBlob = new Blob(
@@ -265,14 +269,19 @@
             workerScript,
             dither: "FloydSteinberg-serpentine",
             quality: 5,
-            width: video.videoWidth,
-            height: video.videoHeight,
+            width: w,
+            height: w,
           });
+          const canvas = document.createElement("canvas");
+          canvas.width = w;
+          canvas.height = w;
+          const ctx = canvas.getContext("2d");
 
           for (let i = 0; i < 90; i++) {
             status.textContent = `${i + 1}/90 프레임 녹화 중..`;
-            gif.addFrame(video, { copy: true, delay: interval });
-            await new Promise((resolve) => setTimeout(resolve, interval));
+            ctx.drawImage(video, 0, 0, w, w);
+            gif.addFrame(ctx, { copy: true, delay: interval });
+            await wait(interval - 5);
           }
           track.stop();
 
