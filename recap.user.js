@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SOOP - 참여 통계 리캡
 // @namespace    https://www.afreecatv.com/
-// @version      4.1.7
+// @version      4.1.8
 // @description  참여 통계에 스트리머 별 총 시간을 표시합니다
 // @author       Jebibot
 // @match        *://broadstatistic.sooplive.co.kr/*
