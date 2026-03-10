@@ -1,26 +1,29 @@
 // ==UserScript==
 // @name         SOOP - 참여 통계 리캡
 // @namespace    https://www.afreecatv.com/
-// @version      4.1.9
+// @version      4.1.10
 // @description  참여 통계에 스트리머 별 총 시간을 표시합니다
 // @author       Jebibot
 // @match        *://broadstatistic.sooplive.co.kr/*
-// @icon         https://res.sooplive.co.kr/favicon.ico
+// @match        *://broadstatistic.sooplive.com/*
+// @icon         https://res.sooplive.com/favicon.ico
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
 // @connect      myapi.sooplive.co.kr
+// @connect      myapi.sooplive.com
 // @license      MIT
 // ==/UserScript==
 
 (function () {
   "use strict";
+  const tld = location.hostname.endsWith(".com") ? "com" : "co.kr";
   let shouldReload = false;
   const favorites = {};
   const fetchFavorites = () =>
     new Promise((resolve, reject) => {
       GM_xmlhttpRequest({
         method: "GET",
-        url: "https://myapi.sooplive.co.kr/api/favorite",
+        url: `https://myapi.sooplive.${tld}/api/favorite`,
         onload: (response) => {
           try {
             const res = JSON.parse(response.responseText);
@@ -52,7 +55,7 @@
     });
   const loadModule = (name) =>
     loadScript(
-      `https://static.sooplive.co.kr/asset/library/highcharts/js/modules/${name}.js`
+      `https://static.sooplive.${tld}/asset/library/highcharts/js/modules/${name}.js`
     );
   const wait = (t) => new Promise((resolve) => setTimeout(resolve, t));
   Promise.all([
@@ -189,7 +192,7 @@
         .append("image")
         .attr("href", (d) => {
           const id = favorites[d.data.name];
-          return `https://stimg.sooplive.co.kr/LOGO/${id.slice(
+          return `https://stimg.sooplive.${tld}/LOGO/${id.slice(
             0,
             2
           )}/${id}/${id}.webp`;
