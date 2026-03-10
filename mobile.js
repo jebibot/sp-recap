@@ -1,13 +1,15 @@
 (function () {
-  if (!location.href.startsWith("https://m.sooplive.co.kr/statistics/a/watch")) {
+  if (!location.href.startsWith("https://m.sooplive.co.kr/statistics/a/watch")
+      && !location.href.startsWith("https://m.sooplive.com/statistics/a/watch")) {
     location.href = "https://m.sooplive.co.kr/statistics/a/watch/?szModule=UserLiveWatchTimeData&szMethod=watch";
     return;
   }
 
+  const tld = location.hostname.endsWith(".com") ? "com" : "co.kr";
   const favorites = {};
   const fetchFavorites = async () => {
     const res = await fetch(
-      "https://api.m.sooplive.co.kr/station/favorite/a/items",
+      `https://api.m.sooplive.${tld}/station/favorite/a/items`,
       {
         method: "POST",
         credentials: "include",
@@ -133,7 +135,7 @@
         .append("image")
         .attr("href", (d) => {
           const id = favorites[d.data.name];
-          return `https://stimg.sooplive.co.kr/LOGO/${id.slice(
+          return `https://stimg.sooplive.${tld}/LOGO/${id.slice(
             0,
             2
           )}/${id}/${id}.webp`;
@@ -206,7 +208,7 @@
   Promise.all([
     fetchFavorites(),
     loadScript(
-      "https://static.sooplive.co.kr/asset/library/highcharts/js/modules/treemap.js"
+      `https://static.sooplive.${tld}/asset/library/highcharts/js/modules/treemap.js`
     ),
     loadScript(
       "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js",
