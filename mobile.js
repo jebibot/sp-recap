@@ -1,20 +1,26 @@
 (function () {
-  if (!location.href.startsWith("https://m.sooplive.co.kr/statistics/a/watch")
-      && !location.href.startsWith("https://m.sooplive.com/statistics/a/watch")) {
-    location.href = "https://m.sooplive.co.kr/statistics/a/watch/?szModule=UserLiveWatchTimeData&szMethod=watch";
+  if (
+    !location.href.startsWith("https://m.sooplive.co.kr/statistics/a/watch") &&
+    !location.href.startsWith("https://m.sooplive.com/statistics/a/watch")
+  ) {
+    location.href =
+      "https://m.sooplive.co.kr/statistics/a/watch/?szModule=UserLiveWatchTimeData&szMethod=watch";
     return;
   }
 
-  const tld = location.hostname.endsWith(".com") ? "com" : "co.kr";
+  const domain = location.hostname.endsWith(".com")
+    ? "sooplive.com"
+    : "sooplive.co.kr";
+  const apimUrl = API_M_AFREECATV || `https://api.m.${domain}`;
+  const staticUrl = STATIC_AFREECA || `https://static.${domain}`;
+  const stimgUrl = STIMG_AFREECATV || `https://stimg.${domain}`;
+
   const favorites = {};
   const fetchFavorites = async () => {
-    const res = await fetch(
-      `https://api.m.sooplive.${tld}/station/favorite/a/items`,
-      {
-        method: "POST",
-        credentials: "include",
-      }
-    );
+    const res = await fetch(`${apimUrl}/station/favorite/a/items`, {
+      method: "POST",
+      credentials: "include",
+    });
     const result = await res.json();
     if (result.data?.groups?.[0]?.contents != null) {
       for (const s of result.data.groups[0].contents) {
@@ -104,7 +110,7 @@
       const color = d3.scaleOrdinal(d3.schemeSet3);
       const pack = d3.pack().size([w, w]).padding(5);
       const root = pack(
-        d3.hierarchy({ children: recapData }).sum((d) => d.value)
+        d3.hierarchy({ children: recapData }).sum((d) => d.value),
       );
 
       const svg = d3
@@ -135,10 +141,7 @@
         .append("image")
         .attr("href", (d) => {
           const id = favorites[d.data.name];
-          return `https://stimg.sooplive.${tld}/LOGO/${id.slice(
-            0,
-            2
-          )}/${id}/${id}.webp`;
+          return `${stimgUrl}/LOGO/${id.slice(0, 2)}/${id}/${id}.webp`;
         })
         .attr("x", (d) => -d.r)
         .attr("y", (d) => -d.r)
@@ -207,12 +210,10 @@
 
   Promise.all([
     fetchFavorites(),
-    loadScript(
-      `https://static.sooplive.${tld}/asset/library/highcharts/js/modules/treemap.js`
-    ),
+    loadScript(`${staticUrl}/asset/library/highcharts/js/modules/treemap.js`),
     loadScript(
       "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js",
-      "sha256-8glLv2FBs1lyLE/kVOtsSw8OQswQzHr5IfwVj864ZTk="
+      "sha256-8glLv2FBs1lyLE/kVOtsSw8OQswQzHr5IfwVj864ZTk=",
     ),
   ]).then(() => {
     callWatchAjax(szMethod, szModule);

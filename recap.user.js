@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SOOP - 참여 통계 리캡
 // @namespace    https://www.afreecatv.com/
-// @version      4.1.10
+// @version      4.1.11
 // @description  참여 통계에 스트리머 별 총 시간을 표시합니다
 // @author       Jebibot
 // @match        *://broadstatistic.sooplive.co.kr/*
@@ -16,14 +16,20 @@
 
 (function () {
   "use strict";
-  const tld = location.hostname.endsWith(".com") ? "com" : "co.kr";
+  const domain = location.hostname.endsWith(".com")
+    ? "sooplive.com"
+    : "sooplive.co.kr";
+  const myapiUrl = unsafeWindow.MYAPI_AFREECATV || `https://myapi.${domain}`;
+  const staticUrl = unsafeWindow.STATIC_AFREECA || `https://static.${domain}`;
+  const stimgUrl = unsafeWindow.STIMG_AFREECATV || `https://stimg.${domain}`;
+
   let shouldReload = false;
   const favorites = {};
   const fetchFavorites = () =>
     new Promise((resolve, reject) => {
       GM_xmlhttpRequest({
         method: "GET",
-        url: `https://myapi.sooplive.${tld}/api/favorite`,
+        url: `${myapiUrl}/api/favorite`,
         onload: (response) => {
           try {
             const res = JSON.parse(response.responseText);
@@ -54,15 +60,13 @@
       document.head.appendChild(s);
     });
   const loadModule = (name) =>
-    loadScript(
-      `https://static.sooplive.${tld}/asset/library/highcharts/js/modules/${name}.js`
-    );
+    loadScript(`${staticUrl}/asset/library/highcharts/js/modules/${name}.js`);
   const wait = (t) => new Promise((resolve) => setTimeout(resolve, t));
   Promise.all([
     fetchFavorites(),
     loadScript(
       "https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js",
-      "sha256-8glLv2FBs1lyLE/kVOtsSw8OQswQzHr5IfwVj864ZTk="
+      "sha256-8glLv2FBs1lyLE/kVOtsSw8OQswQzHr5IfwVj864ZTk=",
     ),
     loadModule("treemap"),
     loadModule("exporting"),
@@ -160,7 +164,7 @@
       const color = d3.scaleOrdinal(d3.schemeSet3);
       const pack = d3.pack().size([w, w]).padding(5);
       const root = pack(
-        d3.hierarchy({ children: recapData }).sum((d) => d.value)
+        d3.hierarchy({ children: recapData }).sum((d) => d.value),
       );
 
       const svg = d3
@@ -192,10 +196,7 @@
         .append("image")
         .attr("href", (d) => {
           const id = favorites[d.data.name];
-          return `https://stimg.sooplive.${tld}/LOGO/${id.slice(
-            0,
-            2
-          )}/${id}/${id}.webp`;
+          return `${stimgUrl}/LOGO/${id.slice(0, 2)}/${id}/${id}.webp`;
         })
         .attr("x", (d) => -d.r)
         .attr("y", (d) => -d.r)
@@ -242,7 +243,7 @@
           if (typeof unsafeWindow.GIF === "undefined") {
             await loadScript(
               "https://cdn.jsdelivr.net/npm/gif.js.optimized@1.0.1/dist/gif.js",
-              "sha256-5A2Bh5t94U3qJPH34JFdAitO3i71TbnH4uWgZ/5J8TI="
+              "sha256-5A2Bh5t94U3qJPH34JFdAitO3i71TbnH4uWgZ/5J8TI=",
             );
           }
           status.textContent = "화면 공유를 허용하여 주세요.";
@@ -265,7 +266,7 @@
             [
               `importScripts('https://cdn.jsdelivr.net/npm/gif.js.optimized@1.0.1/dist/gif.worker.js');`,
             ],
-            { type: "application/javascript" }
+            { type: "application/javascript" },
           );
           const workerScript = URL.createObjectURL(workerBlob);
           const gif = new unsafeWindow.GIF({
@@ -314,7 +315,7 @@
       container.replaceChildren(
         ...(typeof RestrictionTarget === "undefined"
           ? [svgNode]
-          : [svgNode, button, status])
+          : [svgNode, button, status]),
       );
     } catch {}
 
