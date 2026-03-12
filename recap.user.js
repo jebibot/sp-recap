@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SOOP - 참여 통계 리캡
 // @namespace    https://www.afreecatv.com/
-// @version      4.1.11
+// @version      4.1.12
 // @description  참여 통계에 스트리머 별 총 시간을 표시합니다
 // @author       Jebibot
 // @match        *://broadstatistic.sooplive.co.kr/*
@@ -20,7 +20,7 @@
     ? "sooplive.com"
     : "sooplive.co.kr";
   const myapiUrl = unsafeWindow.MYAPI_AFREECATV || `https://myapi.${domain}`;
-  const staticUrl = unsafeWindow.STATIC_AFREECA || `https://static.${domain}`;
+  const staticUrl = unsafeWindow.STATIC_AFREECATV || `https://static.${domain}`;
   const stimgUrl = unsafeWindow.STIMG_AFREECATV || `https://stimg.${domain}`;
 
   let shouldReload = false;
