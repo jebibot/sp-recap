@@ -12,7 +12,7 @@
     ? "sooplive.com"
     : "sooplive.co.kr";
   const apimUrl = API_M_AFREECATV || `https://api.m.${domain}`;
-  const staticUrl = STATIC_AFREECA || `https://static.${domain}`;
+  const staticUrl = STATIC_AFREECATV || `https://static.${domain}`;
   const stimgUrl = STIMG_AFREECATV || `https://stimg.${domain}`;
 
   const favorites = {};
