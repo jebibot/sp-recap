@@ -4,7 +4,7 @@
     !location.href.startsWith("https://m.sooplive.com/statistics/a/watch")
   ) {
     location.href =
-      "https://m.sooplive.co.kr/statistics/a/watch/?szModule=UserLiveWatchTimeData&szMethod=watch";
+      "https://m.sooplive.com/statistics/a/watch/?szModule=UserLiveWatchTimeData&szMethod=watch";
     return;
   }
 
